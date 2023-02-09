@@ -11,24 +11,20 @@ import argparse
 import os
 import logging
 import sys
-from tqdm import tqdm
+from tqdm import tqdm # one-line progress bars
 
+# Add this line of you don't want your job to fail unexpected after multiple hours of training
+# https://stackoverflow.com/questions/12984426/pil-ioerror-image-file-truncated-with-big-images
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
-from smdebug import modes
-from smdebug.pytorch import get_hook
-import smdebug.pytorch as smd
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-def test(model, test_loader, criterion, hook):
+def test(model, test_loader, criterion):
     logger.debug(f"Testing model on whole testing dataset")
     model.eval()
-    if hook is not None:
-        hook.set_mode(modes.EVAL)
     running_loss=0
     running_corrects=0
     
@@ -45,23 +41,19 @@ def test(model, test_loader, criterion, hook):
     logger.info(f"Testing Loss: {total_loss}")
     logger.info(f"Testing Accuracy: {total_acc}")
 
-def train(model, train_loader, validation_loader, criterion, optimizer, hook):
-    epochs=5
+def train(model, train_loader, validation_loader, criterion, optimizer):
+    epochs=1
     best_loss=1e6
     image_dataset={'train':train_loader, 'valid':validation_loader}
     loss_counter=0
     
     for epoch in range(epochs):
         for phase in ['train', 'valid']: 
-            logger.info(f"Epoch: {epoch}, Phase: {phase}")
+            logger.info(f"Epoch: {epoch}, phase {phase}")
             if phase=='train':
                 model.train()
-                if hook is not None:
-                    hook.set_mode(modes.TRAIN)
             else:
                 model.eval()
-                if hook is not None:
-                    hook.set_mode(modes.EVAL)
             running_loss = 0.0
             running_corrects = 0.0
             running_samples=0
@@ -117,7 +109,9 @@ def train(model, train_loader, validation_loader, criterion, optimizer, hook):
         if loss_counter==1:
             logger.info(f"Break due to increasing loss at epoch: {epoch}")
             break
-
+        if epoch==0:
+            logger.info(f"Break due to epoch limit at epoch: {epoch}")
+            break
     return model
     
 def net():
@@ -164,26 +158,16 @@ def main(args):
     logger.info(f'Data Paths: {args.data}')
     
     train_loader, test_loader, validation_loader=create_data_loaders(args.data, args.batch_size)
-    model=net() 
+    model=net()
     
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.fc.parameters(), lr=args.learning_rate)
     
-    logger.info("Creating debug hook")
-    try:
-        hook = smd.Hook.create_from_json_file()
-        hook.register_hook(model)
-        hook.register_loss(criterion)
-        logger.info("Debug hook created")
-    except:
-        hook = None
-        logger.info("Debug hook not avaiable. Skipping...")
-    
     logger.info("Starting Model Training")
-    model=train(model, train_loader, validation_loader, criterion, optimizer, hook)
+    model=train(model, train_loader, validation_loader, criterion, optimizer)
     
     logger.info("Testing Model")
-    test(model, test_loader, criterion, hook)
+    test(model, test_loader, criterion)
     
     logger.info("Saving Model")
     torch.save(model.cpu().state_dict(), os.path.join(args.model_dir, "model.pth"))
