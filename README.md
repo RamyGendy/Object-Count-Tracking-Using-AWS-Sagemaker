@@ -99,7 +99,14 @@ details found in `train.py` script.
 - Install necessary dependencies
 - Read and Preprocess data: Before training your model, you will need to read, load and preprocess your training, testing and validation data
 - Train your Model: it will take about ~20 mins per job with low cost selected instance.
-- Note: in the [Standout Suggestions](#Standout_Suggestions) section we can see how to reduce cost, train on multi instance and add concurrency to our model.
+- Note: in the [Standout Suggestions](#standout-suggestions) section we can see how to reduce cost or train faster on multi-instance.
+
+## Hyperparameter tuning
+
+Before  training it is prefered to find the best hyperparameters for the training job. `hpo.py` python script which executes one epoch of training and tests the hyperparameter ranges:
+
+    - Learning rate range : 0.001, 0.1
+    - Batch size values   : 32, 64, 128, 256, 512
 
 ## Train using SageMaker
 
@@ -108,14 +115,28 @@ Found in in the `sagemaker.ipynb` notebook
 - Setup the training estimator
 - Submit the job
 - Profile, Debug and model (if there any anomalies and Improve with KPI metrics).
+For this project Cross Entropy Loss Output was the metric
+
+![Entroy loss function](./starter/Images/CrossEntropyLoss.jpg)
 
 ## Model Deployment
 
-Once you have trained your model, deploy it to a SageMaker endpoint and then query it with a test image to get a prediction.
+Once you have trained your model, check the metrics and see if the results satisfying then deploy the model to a SageMaker endpoint where we will be able to query it with a test image to get a prediction.
 
-## Standout Suggestions 
-<a name="Standout_Suggestions"></a>
+## Model Inference Test & Evaluation
+
+Once Successful deplyment, we can run a test image like this to see our model prediction.
+
+![test image](./starter/test_image.jpg)
+
+There are `3` items in this bin so it is expected from the model to give us `3` as an answer.
+
+![predictor answer is 3](./starter/Images/predictor%20answer.jpg)
+
+The model answer is: `3`
+
+## Standout Suggestions
 
 - **Hyperparameter Tuning:** To improve the performance of your model, can you use SageMaker’s Hyperparameter Tuning to search through a hyperparameter space and get the value of the best hyperparameters.
-- **Reduce Costs:** To reduce the cost of your machine learning engineering pipeline, you do a cost analysis and use spot instances to train model.
-- **Multi-Instance Training:**  you train the same model, but this time distribute your training workload across multiple instances.
+- **Reduce Costs:** To reduce the cost of your machine learning engineering pipeline, you do a cost analysis and use spot instances to train model and delete endopoint after training.
+- **Multi-Instance Training:**  you train the same model, but this time distribute your training workload across multiple instances. (for details on how distribute training and workloads across multiple instances check my other detailed [project](https://github.com/RamyGendy/MLOps-Operationalizing-AWS-ML-Project)).
