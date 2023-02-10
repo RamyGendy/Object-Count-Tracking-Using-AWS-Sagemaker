@@ -1,6 +1,8 @@
-# Project Overview: Object Count Tracking Using AWS Sagemaker
+# Object Count Tracking Using AWS Sagemaker
 
-## Inventory Monitoring at Distribution Centers
+## Project Overview
+
+### Inventory Monitoring at Distribution Centers
 
 Distribution centers often use robots to move objects as a part of their operations. Objects are carried in bins which can contain multiple objects.
 
@@ -14,7 +16,7 @@ This project was build on AWS SageMaker and its services with good machine learn
 
 ## How it Works
 
-To learn and complete this project. a dataset is needed. I used the <a href="https://registry.opendata.aws/amazon-bin-imagery/">Amazon Bin Image Dataset</a>. The dataset contains 500,000 images of bins containing one or more objects. For each image there is a metadata file containing information about the image like the number of objects, it's dimension and the type of object.
+To learn and complete this project. a dataset is needed. I used the [Amazon Bin Image Dataset]("https://registry.opendata.aws/amazon-bin-imagery/"). The dataset contains 500,000 images of bins containing one or more objects. For each image there is a metadata file containing information about the image like the number of objects, it's dimension and the type of object.
 
 The target is to classify the number of objects in each bin.
 
@@ -42,13 +44,15 @@ Here are the tasks you have to do in more detail:
 
 ## Setup AWS
 
-1. Create a new Sagemaker Instance notebook with instance type `ml.t2.medium` For free tier.
-2. While training: ml.m5.large or ml.m5.xlarge You can use different instance types for this project, but they might require additional permissions to the AWS cloud.
+1. Create a new Sagemaker Instance notebook with instance type `ml.t2.medium` For free tier or any optimal instance use `ml.m5.large` or `ml.m5.xlarge` higher instance but it will come with a cost.
+
+- Note: While training I used `ml.m5.large` or `ml.m5.xlarge`which comes with a cost. You can use different instance types for this project, but they might require additional permissions to the AWS cloud.
 
 ## Download the Starter Files
 
-1. Fork this Github Repo.
-2. Clone your Git repo in Sagemaker Git repo.
+1. Fork this Github Repo. to your own gitub.
+2. Clone your Git repo in Sagemaker Git repo or clone locally in your machine with this line:
+`git clone https://github.com/RamyGendy/Object-Count-Tracking-Using-AWS-Sagemaker.git` and upload files manually to Sagemaker
 3. Navigate to Starter folder.
 
 ## Preparing Data
@@ -56,9 +60,9 @@ Here are the tasks you have to do in more detail:
 To build this project you will have to use the [Amazon Bin Images Dataset](https://registry.opendata.aws/amazon-bin-imagery/)
 
 - Download the dataset: Since this is a large dataset, you have been provided with some code to download a small subset of that data. You are encouraged to use this subset to prevent any excess SageMaker credit usage.
-- Preprocess and clean the files (if needed)
-- Upload them to an S3 bucket so that SageMaker can use them for training
-- OPTIONAL: Verify that the data has been uploaded correctly to the right bucket using the AWS S3 CLI or the S3 UI
+- Preprocess explore, visualize, clean and select the files.
+- Upload selected files to an S3 bucket so that SageMaker can use them for training
+- OPTIONAL: Verify that the data has been uploaded correctly to the right bucket using the `AWS S3 CLI` or the `S3 UI`
 
 ### Data selection
 
@@ -74,18 +78,19 @@ In total 10441 images were used. List of specific files is provided in `file_lis
 
 Finally, split data into train, test and validation datasets with ratios 60%, 20% and 20% respectively before uploading to S3 Bucket.
 
-### Sample overview
+### Dataset Sample overview
 
 ![Dataset-Sample](./starter/Images/sample_dataset.png)
 
 ## Starter Code
 
-Familiarize yourself with the following starter code
+Familiarize yourself with the following starter code files
 
-- [`sagemaker.ipynb`](./starter/sagemaker.ipynb) : Main project entiry notebook.
-- [`train.py`](./starter/train.py) : Model training script.
-- [`hpo.py`](./starter/hpo.py) : hyperparameters tuning script.
-- [`inference.py`](./starter/inference.py) : Model inference and deployment script.
+- [`sagemaker.ipynb`](/starter/sagemaker.ipynb) : Main project entiry notebook.
+- [`train.py`](/starter/train.py) : Model training script.
+- [`hpo.py`](/starter/hpo.py) : hyperparameters tuning script.
+- [`inference.py`](/starter/inference.py) : Model inference and deployment script.
+- [`file_list.json`](/starter/file_list.json) : contain list of image that will be used in training our model.
 
 ## Create a Training Script
 
@@ -93,7 +98,8 @@ details found in `train.py` script.
 
 - Install necessary dependencies
 - Read and Preprocess data: Before training your model, you will need to read, load and preprocess your training, testing and validation data
-- Train your Model.
+- Train your Model: it will take about ~20 mins per job with low cost selected instance.
+- Note: in the [Standout Suggestions](#Standout_Suggestions) section we can see how to reduce cost, train on multi instance and add concurrency to our model.
 
 ## Train using SageMaker
 
@@ -107,7 +113,8 @@ Found in in the `sagemaker.ipynb` notebook
 
 Once you have trained your model, deploy it to a SageMaker endpoint and then query it with a test image to get a prediction.
 
-## Standout Suggestions
+## Standout Suggestions 
+<a name="Standout_Suggestions"></a>
 
 - **Hyperparameter Tuning:** To improve the performance of your model, can you use SageMaker’s Hyperparameter Tuning to search through a hyperparameter space and get the value of the best hyperparameters.
 - **Reduce Costs:** To reduce the cost of your machine learning engineering pipeline, you do a cost analysis and use spot instances to train model.
