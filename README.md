@@ -103,7 +103,7 @@ details found in `train.py` script.
 
 ## Hyperparameter tuning
 
-Before  training it is prefered to find the best hyperparameters for the training job. `hpo.py` python script which executes one epoch of training and tests the hyperparameter ranges:
+Before training it is preferred to find the best hyperparameters for the training job. `hpo.py` python script which executes one epoch of training and tests the hyperparameter ranges:
 
     - Learning rate range : 0.001, 0.1
     - Batch size values   : 32, 64, 128, 256, 512
