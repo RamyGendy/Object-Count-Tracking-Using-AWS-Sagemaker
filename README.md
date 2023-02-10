@@ -59,7 +59,7 @@ Here are the tasks you have to do in more detail:
 
 To build this project you will have to use the [Amazon Bin Images Dataset](https://registry.opendata.aws/amazon-bin-imagery/)
 
-- Download the dataset: Since this is a large dataset, you have been provided with some code to download a small subset of that data. You are encouraged to use this subset to prevent any excess SageMaker credit usage.
+- Download the dataset: Since this is a large dataset, A Json file provided with some code to download a small subset of that data. You are encouraged to use this subset to prevent any excess SageMaker credit usage.
 - Preprocess explore, visualize, clean and select the files.
 - Upload selected files to an S3 bucket so that SageMaker can use them for training
 - OPTIONAL: Verify that the data has been uploaded correctly to the right bucket using the `AWS S3 CLI` or the `S3 UI`
