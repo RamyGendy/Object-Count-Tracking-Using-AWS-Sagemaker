@@ -12,7 +12,7 @@ A system like this can be used to track inventory and make sure that delivery co
 
 This project was build on AWS SageMaker and its services with good machine learning engineering practices to fetch data from a database, preprocess it, then proceed to train, refine, evaluate and validate a machine learning model.
 
- This project will serve as a demonstration of end-to-end machine learning engineering skills that you have learned as a part of this nanodegree.
+This project will serve as a demonstration of end-to-end machine learning engineering skills that I have learned.
 
 ## How it Works
 
